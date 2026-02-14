@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valentine’s Card</title>
+  <style>
+    :root{
+      --bg1:#ffe6ef;
+      --bg2:#fff7fb;
+      --card:#ffffff;
+      --ink:#2a0f1b;
+      --pink:#ff3b7a;
+      --pink2:#ff77a7;
+      --shadow: 0 18px 50px rgba(0,0,0,.14);
+      --radius: 22px;
+      --border: rgba(0,0,0,.08);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--ink);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding:20px 12px;
+    }
+
+    .card{
+      width:min(920px, 96vw);
+      height:min(620px, 84vh);
+      background:var(--card);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      overflow:hidden;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 16px;
+      gap:10px;
+      border-bottom:1px solid var(--border);
+      background:#fff;
+    }
+
+    .title{
+      font-weight:800;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pill{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--pink), var(--pink2));
+      color:#fff;
+      user-select:none;
+    }
+
+    .controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    button{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--ink);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+      touch-action: manipulation;
+    }
+    button.primary{
+      border:0;
+      background:linear-gradient(135deg, var(--pink), var(--pink2));
+      color:#fff;
+    }
+    button:disabled{opacity:.55; cursor:not-allowed}
+
+    .viewport{
+      position:relative;
+      overflow:hidden;
+      background: radial-gradient(700px 400px at 20% 10%, rgba(255,59,122,.08), transparent 60%),
+                  radial-gradient(700px 400px at 90% 60%, rgba(255,119,167,.08), transparent 60%);
+    }
+
+    .pages{
+      height:100%;
+      display:flex;
+      transition: transform 260ms ease;
+      will-change: transform;
+    }
+    @media (prefers-reduced-motion: reduce){
+      .pages{ transition:none; }
+    }
+
+    .page{
+      flex:0 0 100%;
+      padding:22px 18px;
+      display:grid;
+      place-items:center;
+    }
+
+    .paper{
+      width:min(720px, 92%);
+      background:#fff;
+      border-radius:20px;
+      border:1px solid var(--border);
+      box-shadow: 0 14px 34px rgba(0,0,0,.10);
+      padding:22px 18px;
+    }
+
+    .content{
+      display:grid;
+      gap:14px;
+      text-align:center;
+    }
+
+    h1,h2{margin:0}
+    h1{font-size:clamp(26px, 5vw, 44px)}
+    h2{font-size:clamp(18px, 3.8vw, 26px); opacity:.95}
+    p{
+      margin:0;
+      font-size:clamp(14px, 3.2vw, 18px);
+      line-height:1.5;
+      opacity:.9;
+    }
+    .hint{
+      font-size:12px;
+      opacity:.7;
+      user-select:none;
+    }
+
+    /* Crisp SVG heart container */
+    .heart-wrap{
+      display:grid;
+      place-items:center;
+      margin:6px auto 2px;
+    }
+    .heart{
+      width:86px;
+      height:86px;
+    }
+
+    .footer{
+      padding:12px 16px 14px;
+      border-top:1px solid var(--border);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      background:#fff;
+    }
+    .progress{
+      font-weight:800;
+      font-size:13px;
+      opacity:.8;
+      user-select:none;
+    }
+
+    @media (max-height: 560px){
+      .card{height: 92vh;}
+      .paper{padding:18px 14px;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card" role="application" aria-label="Valentine's Card">
+      <div class="topbar">
+        <div class="title">
+          <span class="pill">Valentine</span>
+          <span id="cardTitle">For You</span>
+        </div>
+        <div class="controls">
+          <button id="prevBtn" aria-label="Previous page">←</button>
+          <button class="primary" id="nextBtn" aria-label="Next page">Next →</button>
+        </div>
+      </div>
+
+      <div class="viewport" id="viewport">
+        <div class="pages" id="pages">
+
+<!-- PAGE 1 -->
+<section class="page">
+  <div class="paper">
+    <div class="content">
+      <div class="heart-wrap" aria-hidden="true">
+        <!-- Nice looking heart (SVG = crisp, no emoji issues) -->
+        <svg class="heart" viewBox="0 0 64 64" role="img" aria-label="Heart">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff3b7a"/>
+              <stop offset="1" stop-color="#ff77a7"/>
+            </linearGradient>
+            <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="#ff3b7a" flood-opacity="0.25"/>
+            </filter>
+          </defs>
+          <path filter="url(#s)" fill="url(#g)"
+            d="M32 56s-20-12.5-27-25C-1.2 19.6 6.2 8 18 8c6.2 0 10.2 3.5 14 8
+               3.8-4.5 7.8-8 14-8c11.8 0 19.2 11.6 13 23C52 43.5 32 56 32 56z"/>
+          <path fill="rgba(255,255,255,.35)"
+            d="M22 14c-5.6 0-10 4.6-10 10.2 0 1 .1 2 .4 2.9.2.6.9.9 1.5.7.6-.2.9-.9.7-1.5-.2-.7-.3-1.4-.3-2.1
+               0-4.4 3.5-8 7.8-8 .7 0 1.2-.5 1.2-1.2S22.7 14 22 14z"/>
+        </svg>
+      </div>
+
+      <h1>Happy Valentines</h1>
+      <p>Tap/click next to turn the pages.</p>
+      <p class="hint">Swipe or click</p>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="page">
+  <div class="paper">
+    <div class="content">
+      <h2>Dear courtney</h2>
+      <p>
+        Hello, so, this is a page I just added at like 1am just before I planned on sending this to you. 
+        I have heavily considered not sending it and I know how stressed you are right now hope this + the massage
+        I owe you will make you feel better. I thought doing something nice for you might make your mood better. 
+        With everything that has happened in the last week or so I thought maybe something sweet like this will help you.
+
+        Stay strong and keep showing that fucking gorgeous smile of yours.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="page">
+  <div class="paper">
+    <div class="content">
+      <h2>Hello you rat</h2>
+      <p>
+        Honestly I didnt know what to do for you, I knew you wouldnt let me spend money
+        and I knew anything else would be a bit too much. The original plan went to shit
+        because it was fully 4000 lines of code for some flowers
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 3 -->
+<section class="page">
+  <div class="paper">
+    <div class="content">
+      <p>
+        So I thought I would make you a card, put some time and effort into it I guess.
+        This may be too much but hey ho I told you I would be putting in effort into you
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 4 -->
+<section class="page">
+  <div class="paper">
+    <div class="content">
+      <p>
+        Well, here goes nothing. I havent written one of these in fucking ages, and I mean a card in general
+        like we both know I could make this the craziest waffle known to mankind but we will try to avoid that shit
+        I am actually confused what to write so heres a page of waffle and the rest is actual cute stuff!
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE 5 -->
+<section class="page">
+  <div class="paper">
+    <div class="content">
+      <p>
+        You are genuinely so gorgeous, I get actually stunned half the time I look at you.
+        You are kinda, slightly, maybe funny. You care so much for the people you care about,
+        your care literally has no bounds and it is so attractive. Theres no real flow in this,
+        its kinda just me listing off what comes to my head as I want this to be as close to
+        saying it in person as possible.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- PAGE 5 -->
+<section class="page">
+  <div class="paper">
+    <div class="content">
+      <p>
+        I also lied. I did the flowers I will try to attatch them all at the end of this. Happy valentines gorgeous
+      </p>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+          
+
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="progress" id="progress">Page 1 / 3</div>
+        <div class="hint">Tip: click the card then use ← →</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pagesEl = document.getElementById('pages');
+    const pageNodes = () => Array.from(document.querySelectorAll('.page'));
+    const progressEl = document.getElementById('progress');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const viewport = document.getElementById('viewport');
+
+    let index = 0;
+
+    function update(){
+      const total = pageNodes().length;
+      index = Math.max(0, Math.min(index, total - 1));
+      pagesEl.style.transform = `translateX(${-index * 100}%)`;
+      progressEl.textContent = `Page ${index + 1} / ${total}`;
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === total - 1;
+    }
+
+    function next(){ index++; update(); }
+    function prev(){ index--; update(); }
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    // Keyboard (PC)
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowRight') next();
+      if(e.key === 'ArrowLeft') prev();
+    });
+
+    // Swipe (Mobile)
+    let startX = 0, startY = 0, tracking = false;
+
+    viewport.addEventListener('touchstart', (e) => {
+      if(!e.touches || e.touches.length !== 1) return;
+      tracking = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, {passive:true});
+
+    viewport.addEventListener('touchend', (e) => {
+      if(!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+
+      if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)){
+        if(dx < 0) next(); else prev();
+      }
+    }, {passive:true});
+
+    update();
+  </script>
+</body>
+</html>
